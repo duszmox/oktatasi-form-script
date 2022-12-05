@@ -5,10 +5,18 @@ import random
 import sys
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 
 survey_url = 'https://szuloikerdoiv34524.unipoll.hu/Survey.aspx?SurveyId=20000148'
 
+def clickOnNext(xpath):
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath))).click()
+
+def randomOfArray(array):
+    return array[random.randint(0, len(array) - 1)]
 # get arguments from command line
 args = sys.argv
 answer = ""
@@ -119,32 +127,22 @@ if answer.lower() in ['i', 'igen']:
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     while True:
         driver.get(survey_url)
-        time.sleep(1)
-        driver.find_element(
-            By.XPATH, "// button[@class='mat-ripple mat-tooltip-trigger start-btn']").click()
+        clickOnNext("//button[@class='mat-ripple mat-tooltip-trigger start-btn']")
         time.sleep(1)
         int = 1
         for question in answers:
             if question == list(questions.keys())[-1]:
                 driver.find_element(
                     By.XPATH, "//textarea[@class='answer-input']").send_keys(answers[question])
-                time.sleep(1)
-                driver.find_element(
-                    By.XPATH, "//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']").click()
+                clickOnNext("//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']")
             else:
                 driver.find_element(
                     By.XPATH, "//label[@for=" + answers[question] + "]").click()
                 if int % 2 == 0:
-                    time.sleep(1)
-                    driver.find_element(
-                        By.XPATH, "//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']").click()
+                    clickOnNext("//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']")
                 int += 1
-
-        driver.find_element(
-            By.XPATH, "//button[@class='mat-ripple submit__button ng-tns-c117-0']").click()
-        time.sleep(1)
-        driver.find_element(
-            By.XPATH, "//button[@class='mat-ripple dialog__button dialog__button--ok ng-star-inserted']").click()
+        clickOnNext("//button[@class='mat-ripple submit__button ng-tns-c117-0']")
+        clickOnNext("//button[@class='mat-ripple dialog__button dialog__button--ok ng-star-inserted']")
         time.sleep(1)
 
 
@@ -152,98 +150,62 @@ else:
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     while True:
         driver.get(survey_url)
-        time.sleep(1)
-        driver.find_element(
-            By.XPATH, "// button[@class='mat-ripple mat-tooltip-trigger start-btn']").click()
-        time.sleep(1)
+        clickOnNext("//button[@class='mat-ripple mat-tooltip-trigger start-btn']")
 
-        grade_ids = ["20000204", "20000208", "20000212"]
-        random_grade_id = random.choice(grade_ids)
-        driver.find_element(
-            By.XPATH, "//label[@for=" + random_grade_id + "]").click()
 
-        maintainer_ids = ["20000231", "20000235", "20000239", "20000243"]
-        random_maintainer_id = random.choice(maintainer_ids)
-        driver.find_element(
-            By.XPATH, "//label[@for=" + random_maintainer_id + "]").click()
-        time.sleep(1)
-        driver.find_element(
-            By.XPATH, "//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']").click()
 
-        like_ids = ["20000268", "20000272", "20000276", "20000280", "20000284"]
-        random_like_id = random.choice(like_ids)
-        driver.find_element(
-            By.XPATH, "//label[@for=" + random_like_id + "]").click()
+        random_grade_id = randomOfArray(["20000204", "20000208", "20000212"])
+        clickOnNext("//label[@for=" + random_grade_id + "]")
 
-        problematic_ids = ["20000303", "20000307",
-                           "20000311", "20000315", "20000319"]
-        random_problematic_id = random.choice(problematic_ids)
-        driver.find_element(
-            By.XPATH, "//label[@for=" + random_problematic_id + "]").click()
+        random_maintainer_id = randomOfArray(["20000231", "20000235", "20000239", "20000243"])
+        clickOnNext("//label[@for=" + random_maintainer_id + "]")
+        clickOnNext("//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']")
 
-        time.sleep(1)
-        driver.find_element(
-            By.XPATH, "//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']").click()
+        random_like_id = randomOfArray(["20000268", "20000272", "20000276", "20000280", "20000284"])
+        clickOnNext("//label[@for=" + random_like_id + "]")
 
-        home_work_ids = ["20000344", "20000348",
-                         "20000352", "20000356", "20000360"]
-        random_home_work_id = random.choice(home_work_ids)
-        driver.find_element(
-            By.XPATH, "//label[@for=" + random_home_work_id + "]").click()
 
-        private_teacher_ids = ["20000379", "20000383"]
-        random_private_teacher_id = random.choice(private_teacher_ids)
-        driver.find_element(
-            By.XPATH, "//label[@for=" + random_private_teacher_id + "]").click()
+        random_problematic_id = randomOfArray(["20000303", "20000307",
+                                                  "20000311", "20000315", "20000319"])  
+        clickOnNext("//label[@for=" + random_problematic_id + "]")
 
-        time.sleep(1)
-        driver.find_element(
-            By.XPATH, "//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']").click()
+        clickOnNext("//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']")
 
-        improvement_helping_program_ids = ["20000408", "20000412", "20000416"]
-        random_improvement_helping_program_id = random.choice(
-            improvement_helping_program_ids)
-        driver.find_element(
-            By.XPATH, "//label[@for=" + random_improvement_helping_program_id + "]").click()
 
-        objectivity_ids = ["20000435", "20000439",
-                           "20000443", "20000447", "20000451"]
-        random_objectivity_id = random.choice(objectivity_ids)
-        driver.find_element(
-            By.XPATH, "//label[@for=" + random_objectivity_id + "]").click()
+        random_home_work_id = randomOfArray(["20000344", "20000348",
+                                                "20000352", "20000356", "20000360"])
+        clickOnNext("//label[@for=" + random_home_work_id + "]")
 
-        time.sleep(1)
-        driver.find_element(
-            By.XPATH, "//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']").click()
+        random_private_teacher_id = randomOfArray(["20000379", "20000383"])
+        clickOnNext("//label[@for=" + random_private_teacher_id + "]")
 
-        free_sport_ids = ["20000476", "20000480", "20000484"]
-        random_free_sport_id = random.choice(free_sport_ids)
-        driver.find_element(
-            By.XPATH, "//label[@for=" + random_free_sport_id + "]").click()
+        clickOnNext("//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']")
 
-        art_ids = ["20000503", "20000507", "20000511"]
-        random_art_id = random.choice(art_ids)
-        driver.find_element(
-            By.XPATH, "//label[@for=" + random_art_id + "]").click()
+        random_improvement_helping_program_id = randomOfArray(["20000408", "20000412", "20000416"])
+        clickOnNext("//label[@for=" + random_improvement_helping_program_id + "]")
 
-        time.sleep(1)
-        driver.find_element(
-            By.XPATH, "//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']").click()
+        random_objectivity_id = randomOfArray(["20000435", "20000439",
+                                            "20000443", "20000447", "20000451"])
+        clickOnNext("//label[@for=" + random_objectivity_id + "]")
+
+        clickOnNext("//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']")
+
+        random_free_sport_id = randomOfArray(["20000476", "20000480", "20000484"])
+        clickOnNext("//label[@for=" + random_free_sport_id + "]")
+
+        random_art_id = randomOfArray(["20000503", "20000507", "20000511"])
+        clickOnNext("//label[@for=" + random_art_id + "]")
+
+        clickOnNext("//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']")
 
         students_involvment_id = "20000536"
-        driver.find_element(
-            By.XPATH, "//label[@for=" + students_involvment_id + "]").click()
+        clickOnNext("//label[@for=" + students_involvment_id + "]")
 
         driver.find_element(
             By.XPATH, "//textarea[@class='answer-input']").send_keys("Nyílt levél Pintér Sándor miniszter Úrhoz! Tisztelt Uram! Nem tudom mikor járt utóljára iskolába, de néhány tanácsot fogadjon el, egy több mint 40 éve tanító tanártól. Azt mondja, hogy tanítani akkor lehet, ha rend van a tanteremben. Alapvetően ez igaz. A kérdés az, Ön mit ért rend alatt? Kérem fogadja el, hogy a rend nem az, hogy bekamerázzuk a tantermeket, a rend nem az, hogy iskola rendőrséget hozunk létre, a rend nem az, hogy nincs választási lehetőségünk, a rend nem az, hogy egyen tankönyvekből tanítuk. Nézzen körül a világban. Javaslom, hogy először Finnországba menjen. A rend az oktatásban az, hogy minden osztályt, minden csoportot a saját képességei szerint oktatunk. Mert bár egyszerűbb lenne, de nincs két egyforma tanuló, osztály, tanulócsoport. Nem lehet uniformizálni. Azt mondja, hogy a tanárokat egy-két pofonnal megregulázza! Ezt különösen sértőnek és felháborítónak tartom. Kikérem magamnak, hogy fenyegessen, hogy megpróbáljon megfélemlíteni minket! Jogunk van kifejezni az elégedetlenségünket, jogunk van a szabad oktatáshoz, jogunk van az emberi méltósághoz, jogunk van a sztrájkhoz! Magának nincs joga minket megfélemlíteni! Magának az a feladata, hogy a feltételeket biztosítsa! Megfelelően felszerelt iskolák, megfelelő tantervek és piacképes fizetés. Megfelelő tanárképzés. A tanárok lejáratásának megszüntetése. Maguk államilag elfogadottan lejáratnak minket. És ez felháborító! Gondolkozzon el azon, hogy hogyan segíthet és ne fenyegetőzzön! Mert úgy tünik már elfelejtette, de tanulni jó! Tisztelettel: Dolgos Eszter okleveles közgazdász tanár, adótanácsadó, IFRS szerinti mérlegképes könyvelő és több mint 40 éve elhivatott tanár")
 
-        time.sleep(1)
-        driver.find_element(
-            By.XPATH, "//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']").click()
+        clickOnNext("//button[@class='mat-ripple mat-tooltip-trigger paginator__btn']")
 
-        driver.find_element(
-            By.XPATH, "//button[@class='mat-ripple submit__button ng-tns-c117-0']").click()
-        time.sleep(1)
-        driver.find_element(
-            By.XPATH, "//button[@class='mat-ripple dialog__button dialog__button--ok ng-star-inserted']").click()
+        clickOnNext("//button[@class='mat-ripple submit__button ng-tns-c117-0']")
+        clickOnNext("//button[@class='mat-ripple dialog__button dialog__button--ok ng-star-inserted']")
         time.sleep(1)
