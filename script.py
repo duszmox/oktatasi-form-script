@@ -3,6 +3,9 @@ from selenium.webdriver.common.by import By
 import time
 import random
 import sys
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 survey_url = 'https://szuloikerdoiv34524.unipoll.hu/Survey.aspx?SurveyId=20000148'
 
@@ -113,7 +116,7 @@ if answer.lower() in ['i', 'igen']:
             answers[question] = questions[question][list(
                 questions[question].keys())[int(answer)-1]]
 
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     while True:
         driver.get(survey_url)
         time.sleep(1)
@@ -146,7 +149,7 @@ if answer.lower() in ['i', 'igen']:
 
 
 else:
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
     while True:
         driver.get(survey_url)
         time.sleep(1)
