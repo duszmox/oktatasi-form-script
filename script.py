@@ -1,13 +1,13 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
-import time
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
+import json
 import random
 import sys
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
+import time
 
 
 survey_url = 'https://szuloikerdoiv34524.unipoll.hu/Survey.aspx?SurveyId=20000148'
@@ -17,7 +17,6 @@ def clickOnNext(xpath):
 
 def randomOfArray(array):
     return array[random.randint(0, len(array) - 1)]
-# get arguments from command line
 args = sys.argv
 answer = ""
 if len(args) > 1:
@@ -31,80 +30,13 @@ else:
     answer = input('Saját válaszokkal szeretnéd kitölteni? (i/n) ')
     while answer.lower() not in ['i', 'n', 'igen', 'nem']:
         answer = input('Saját válaszokkal szeretnéd kitölteni? (i/n) ')
-questions = {
-    "Kérjük, jelölje meg, mely évfolyamon tanul a gyermeke.": {
-        "1-4 évfolyamon": "20000204",
-        "5-8 évfolyamon": "20000208",
-        "9-12 évfolyamon": "20000212",
-    },
-    "Kérjük, válassza ki gyermeke iskolája fenntartójának típusát!": {
-        "tankerületi központ": "20000231",
-        "egyházi jogi személy": "20000235",
-        "felsőoktatási intézmény": "20000239",
-        "egyéb": "20000243",
-    },
-    "Szeret-e iskolába járni gyermeke? (1-5-ig terjedő skálán)": {
-        "1": "20000268",
-        "2": "20000272",
-        "3": "20000276",
-        "4": "20000280",
-        "5": "20000284",
-    },
-    "Van-e gyermeke osztályában olyan tanuló, aki magatartásával zavarja az osztálytársait, vagy egyéb, súlyos magatartási problémái vannak?": {
-        "Nincs": "20000303",
-        "1-2": "20000307",
-        "2-4": "20000311",
-        "5 vagy annál több": "20000315",
-        "nem tudom": "20000319",
-    },
-    "Kérjük, jelölje, gyermeke átlagosan mennyi időt tölt a házi feladat elkészítésével naponta?": {
-        "nincs házi feladat": "20000344",
-        "kevesebb, mint egy órát": "20000348",
-        "1-2 óra között időt": "20000352",
-        "2-3 óra közötti időt": "20000356",
-        "3 óránál többet": "20000360",
-    },
-    "Jár-e magántanárhoz valamilyen tárgyból a gyermeke annak érdekében, hogy az iskolai követelményeket megfelelően tudja teljesíteni?": {
-        "igen": "20000379",
-        "nem": "20000383",
-    },
-    "Gyermeke iskolájában szerveznek-e kellő számú, a tanulók fejlődését segítő tanórán kívüli programot?": {
-        "igen": "20000408",
-        "nem": "20000412",
-        "nem tudom": "20000416",
-    },
-    "Ön szerint gyermekének iskolai teljesítményét mennyire objektíven, azaz a teljesítményének és a képességeinek megfelelően mérik a pedagógusok? (1-5-ig terjedő skálán)": {
-        "1": "20000435",
-        "2": "20000439",
-        "3": "20000443",
-        "4": "20000447",
-        "5": "20000451",
-    },
-    "Kérjük, jelölje, hogy van-e lehetőség gyermeke iskolájában tanórán kívüli, ingyenes sportolásra (szakkör, diáksport, tömegsport vagy egyéb program keretében) délutánonként?": {
-        "igen": "20000476",
-        "nem": "20000480",
-        "nem tudom": "20000484",
-    },
-    "Kérjük, jelölje, hogy van-e lehetőség gyermeke iskolájában tanórán kívüli, ingyenes művészeti képzésre(szakkör vagy egyéb foglalkozások keretében) délutánonként?": {
-        "igen": "20000503",
-        "nem": "20000507",
-        "nem tudom": "20000511",
-    },
-    "Kérjük, jelölje, hogy egyetért-e Ön azzal, hogy a pedagógusok a tanulókat is bevonják a bérezésükkel kapcsolatos demonstrációkba?": {
-        "igen": "20000536",
-        "nem": "20000540",
-        "nem tudom": "20000544",
-    },
-    "Amennyiben további javaslata, véleménye lenne, kérjük, azt itt fogalmazza meg röviden! (Max. 4000 karakter)": "//textarea[@class='answer-input']"
-}
+with open('questions.json', 'r', encoding='utf-8') as f:
+    questions = json.load(f)
 
 if answer.lower() in ['i', 'igen']:
-    # ask every question and makethem choose by entering the corresponding numbers
     answers = {}
     for question in questions:
-        # get last question
         if question == list(questions.keys())[-1]:
-            # if it's the last question, ask for the answer
             answer = input(question + ": \n")
             while len(answer) > 4000:
                 print("Túl hosszú a válasz, maximum 4000 karakter lehet!")
@@ -118,7 +50,6 @@ if answer.lower() in ['i', 'igen']:
                 i += 1
             i -= 1
             answer = input('1-' + str(i) + '-ig válaszd ki a válaszod: ')
-            # check if answer is in range
             while answer not in [str(x) for x in range(1, i+1)]:
                 answer = input('1-' + str(i) + '-ig válaszd ki a válaszod: ')
             answers[question] = questions[question][list(
