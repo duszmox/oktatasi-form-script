@@ -7,9 +7,10 @@ Az nem régiben az OH által kiadott form automatikus kitöltésére írt script
 * [Python 3](https://www.python.org/)
 * [Selenium 4](https://pypi.org/project/selenium/)
 * [Chrome webdriver](https://chromedriver.chromium.org/) illetve a hozzátartozó böngésző
-  Utóbbi kettő a pip install -r requirements.txt parancs lefuttatásával telepíthetőek
+  Utóbbi kettő a `pip install -r requirements.txt` parancs lefuttatásával telepíthetőek
 
 ## Futtatás
+A repo letöltése után az alábbi parancs lefuttatásával tudod elindítani a programot: macOS / Linux
 
 **macOS / Linux**
 
